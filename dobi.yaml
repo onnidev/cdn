@@ -1,12 +1,17 @@
 meta:
   project: cdn 
 
+image=nginx:
+  image: onnidev/cdn-nginx
+  tags: ["latest"]
+  context: ./nginx
+
 image=production:
   image: onnidev/cdn
   tags: ["latest"]
   context: ./
   steps: |
-    FROM cescoferraro/docker-nginx
+    FROM onnidev/cdn-nginx
     COPY ./ /var/www
     CMD 'nginx'
 
