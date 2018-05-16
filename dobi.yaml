@@ -1,0 +1,12 @@
+meta:
+  project: cdn 
+
+image=production:
+  image: onnidev/cdn
+  tags: ["latest"]
+  context: ./
+  steps: |
+    FROM cescoferraro/docker-nginx
+    COPY ./ /var/www
+    CMD 'nginx'
+

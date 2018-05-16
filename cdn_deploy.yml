@@ -1,0 +1,20 @@
+---            
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cdn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cdn
+  template:
+    metadata:
+      labels:
+        app: cdn
+    spec:
+      containers:
+      - name: cdn
+        image: onnidev/cdn 
+        ports:
+        - containerPort: 80 

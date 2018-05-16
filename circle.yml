@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  production:
+    docker: [{image: 'onnidev/circle'}]
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+          docker login -u $DOCKER_USER --password $DOCKER_PASS
+          dobi --no-bind-mount production
+          docker push onnidev/cdn 
+  deployCDN:
+    docker: [{image: 'onnidev/circle'}]
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: |
+         docker login -u $DOCKER_USER --password $DOCKER_PASS
+         kubectl get pods --kubeconfig=kube.json
+         kubectl delete -f cdn_deploy.yml --kubeconfig=kube.json
+         kubectl create -f cdn_deploy.yml --kubeconfig=kube.json
+         kubectl get pods --kubeconfig=kube.json
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - production:
+          filters:
+            branches:
+              only:
+                - master
+      - deployCDN:
+          requires:
+            - production 
